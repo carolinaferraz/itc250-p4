@@ -3,7 +3,7 @@
 /**
  * index.php along with news_view.php allows us to view news items.
  *
- * @package SurveySez
+ * @package News
  * @author Carolina Ferraz <carol@gmail.com>
  * @version 1 2019/05/09
  * @link http://cferraz.000webhostapp.com
@@ -62,66 +62,7 @@ $sql = $myPager->loadSQL($sql);  #load SQL, add offset
 $result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
 
 
-if(mysqli_num_rows($result) > 0)
-{#records exist - process
-	if($myPager->showTotal()==1){$itemz = "item";}else{$itemz = "items";}  //deal with plural
-    echo '<div align="center">We have ' . $myPager->showTotal() . ' ' . $itemz . '!</div>';
-    
-    $prevrow = null;
-    
-	while($row = mysqli_fetch_assoc($result))
-    {# process each row
-        
-        //1st row
-        if($prevrow == null){
-        echo '
-        <h4>' . dbOut($row['Category']) . ': <small class="text-info"> ' . dbOut($row['Description']) . '</small></h4>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Description</th>
-                </tr>
-            </thead>
-            <tbody>';
-        }
 
-        //start new table
-        if($prevrow['Category'] != $row['Category'] && $prevrow != null){
-        echo '
-            </tbody>
-        </table>
-        <h4 style="margin-top:3em;">' . dbOut($row['Category']) . ': <small class="text-info"> ' . dbOut($row['Description']) . '</small></h4>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Description</th>
-                </tr>
-            </thead>
-            <tbody>';
-        }
-        
-        //one feed/row
-        echo '
-            <tr>
-                <td><a href="' . VIRTUAL_PATH . 'news/news_view.php?id=' . (int)$row['ItemID'] . '">' . dbOut($row['ItemTitle']) . '</a></td>
-                <td>' . dbOut($row['ItemDescription']) . '</td>
-            </tr>
-        ';
-        
-        $prevrow = $row; 
-	}
-    
-    echo '
-        </tbody>
-    </table> 
-    ';
-    
-	echo $myPager->showNAV(); # show paging nav, only if enough records	 
-} else {
-    echo "<div align=center>oops, no news here!</div>";	
-}
+
 @mysqli_free_result($result);
-get_footer(); #defaults to theme footer or footer_inc.php
-?>
+get_footer(); #defaults to theme footer or footer_inc.php 

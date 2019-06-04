@@ -60,6 +60,7 @@ if($myItem->IsValid) {
     <div>news not found</div>
     ';
 }
+
 get_footer(); #defaults to theme footer or footer_inc.php
 
 
