@@ -30,7 +30,9 @@ if($myItem->IsValid)
 }
 //get rss feed xml 
     $feedXML = $myItem->ItemLink; //get rss XML url string from Feed object
-    $xml = simplexml_load_file($feedXML);//get RSS XML file from source and convert to object
+    $feedXML = file_get_contents($feedXML);
+    $xml = simplexml_load_string($feedXML);//get RSS XML file from source and convert to object
+    print'<h1>' . $xml->channel->title . '</h1>';
 
 $namespaces = $xml->getNamespaces(true); //get namespaces from xml (needed to parse media:content tags in certain rss feeds)
 
@@ -43,28 +45,16 @@ get_header(); #defaults to theme header or header_inc.php
 <p><?=$myItem->ItemDescription;?></p>
 <?php
 
-
-//THIS IS WHERE THE LINKS TO ACTUAL NEWS ABOUT THE TOPIC SHOULD APPEAR! 
+ 
 
 //show data
 if($myItem->IsValid) {
     
-    echo '
-        <div class="list-group">
-    ';
-        echo '
-            <a href="' . $myItem->ItemLink . '" class="list-group-item list-group-item-action flex-column align-items-start" target="_blank" style="overflow:auto;">
-                <div class="d-flex w-100 justify-content-between">
-                    <h4 style="margin-bottom:0;">' . $myItem->ItemTitle . '</h4>
-                   
-                </div>
-                <p style="margin:1rem 0;">' . $myItem->ItemDescription . '</p>
-            </a>
-        ';
-
-    echo '
-        </div>
-    ';
+    foreach($xml->channel->item as $story)
+    {
+        echo '<a href="' .$story->link . '">' . $story->title . '</a><br>';
+        echo '<p>' . $story->description . '</p><br><br>';
+    }
     } else {
     echo '
     <div>news not found</div>
